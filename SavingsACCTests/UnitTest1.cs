@@ -5,58 +5,99 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
+using SavingsACC;
 
 namespace SavingsACCTests
 {
     [TestFixture]
     public class MainWindowTests
     {
-        private MainWindow mainWindow;
+        private MainWindow _window;
 
         [SetUp]
         public void SetUp()
         {
-            mainWindow = new MainWindow();
+            _window = new MainWindow();
         }
 
         [Test]
-        public void AddBill_AddsBillCorrectly()
+        public void AddBalance_AddsToAccountBalance()
         {
-            // Arrange
-            double initialBalance = 1000;
+            double initialBalance = _window.accountBalance;
+            double amountToAdd = 100;
+
+            _window.txtBalance.Text = amountToAdd.ToString();
+            _window.AddBalance_Click(null, null);
+
+            Assert.AreEqual(initialBalance + amountToAdd, _window.accountBalance);
+        }
+
+        [Test]
+        public void AddBill_AddsToBillsAndDeductsFromAccountBalance()
+        {
+            double initialBalance = _window.accountBalance;
             double billAmount = 50;
 
-            mainWindow.txtBalance.Text = initialBalance.ToString();
-            mainWindow.txtBillAmount.Text = billAmount.ToString();
+            _window.txtBillAmount.Text = billAmount.ToString();
+            _window.cmbBillType.SelectedIndex = 0; // Selecting the first bill type
+            _window.AddBill_Click(null, null);
 
-            // Act
-            mainWindow.AddBill_Click(null, null);
-
-            // Assert
-            Assert.AreEqual(initialBalance - (billAmount * 12), mainWindow.accountBalance);
+            Assert.AreEqual(initialBalance - (billAmount * 12), _window.accountBalance);
+            Assert.AreEqual(1, _window.bills.Count);
         }
 
         [Test]
-        public void RemoveLastBill_RemovesLastBillCorrectly()
+        public void RemoveLastBill_RemovesFromBillsAndAddsToAccountBalance()
         {
-            // Arrange
-            double initialBalance = 1000;
-            double billAmount1 = 50;
-            double billAmount2 = 75;
+            double initialBalance = _window.accountBalance;
+            double billAmount = 50;
 
-            mainWindow.txtBalance.Text = initialBalance.ToString();
-            mainWindow.txtBillAmount.Text = billAmount1.ToString();
-            mainWindow.AddBill_Click(null, null);
-            mainWindow.txtBillAmount.Text = billAmount2.ToString();
-            mainWindow.AddBill_Click(null, null);
+            _window.txtBillAmount.Text = billAmount.ToString();
+            _window.cmbBillType.SelectedIndex = 0; // Selecting the first bill type
+            _window.AddBill_Click(null, null);
 
-            // Act
-            mainWindow.RemoveLastBill_Click(null, null);
+            double updatedBalance = _window.accountBalance;
+            _window.RemoveLastBill_Click(null, null);
 
-            // Assert
-            Assert.AreEqual(initialBalance - (billAmount1 * 12), mainWindow.accountBalance);
+            Assert.AreEqual(initialBalance, _window.accountBalance);
+            Assert.AreEqual(0, _window.bills.Count);
+            Assert.AreEqual(initialBalance + (billAmount * 12), updatedBalance);
         }
 
+        [Test]
+        public void CalculateSavings_CorrectlyCalculatesMonthlySavings()
+        {
+            double balance = 1000;
+            double desiredSavings = 5000;
+
+            _window.accountBalance = balance;
+            _window.txtDesiredSavings.Text = desiredSavings.ToString();
+            _window.CalculateSavings_Click(null, null);
+
+            // Expected monthly savings = Desired savings / 12
+            double expectedMonthlySavings = desiredSavings / 12;
+
+            Assert.AreEqual(expectedMonthlySavings, _window.accountBalance);
+        }
+
+        [Test]
+        public void InputValidation_HandlesInvalidInputs()
+        {
+            // Test invalid balance input
+            _window.txtBalance.Text = "abc";
+            _window.AddBalance_Click(null, null);
+            Assert.AreEqual(0, _window.accountBalance);
+
+            // Test invalid bill amount input
+            _window.txtBillAmount.Text = "xyz";
+            _window.cmbBillType.SelectedIndex = 0;
+            _window.AddBill_Click(null, null);
+            Assert.AreEqual(0, _window.bills.Count);
+
+            // Test invalid desired savings input
+            _window.txtDesiredSavings.Text = "123abc";
+            _window.CalculateSavings_Click(null, null);
+            // Assert the appropriate message box is shown
+        }
     }
 }
-

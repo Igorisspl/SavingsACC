@@ -17,13 +17,17 @@ namespace SavingsACC
 {
     public partial class MainWindow : Window
     {
+
         public double accountBalance = 0;
+
         public MainWindow()
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
         }
+
         public List<(double amount, string type)> bills = new List<(double amount, string type)>();
+
         public void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             bills = new List<(double amount, string type)>();
@@ -37,6 +41,7 @@ namespace SavingsACC
             //Console.WriteLine($"Number of bills initialized: {bills.Count}");
             UpdateAccountBalanceDisplay();
         }
+
         public void AddBalance_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -50,10 +55,12 @@ namespace SavingsACC
                 MessageBox.Show("Please enter a valid balance.");
             }
         }
+
         public void UpdateAccountBalanceDisplay()
         {
             txtAccountBalance.Text = $"Account Balance: {accountBalance:C}";
         }
+
         public void AddBill_Click(object sender, RoutedEventArgs e)
         {
             // Check if an item is selected in the ComboBox
@@ -81,6 +88,7 @@ namespace SavingsACC
                 MessageBox.Show("Please enter a valid bill amount.");
             }
         }
+
         public void RemoveLastBill_Click(object sender, RoutedEventArgs e)
         {
             // Check if there are any bills in the list
@@ -100,6 +108,7 @@ namespace SavingsACC
             // Update the display of account balance
             UpdateAccountBalanceDisplay();
         }
+
         public void CalculateSavings_Click(object sender, RoutedEventArgs e)
         {
             try
