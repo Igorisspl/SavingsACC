@@ -24,7 +24,7 @@
             <TextBox x:Name="txtBalance" Margin="0 5 0 10"/>
             <Button Content="Add" Click="AddBalance_Click" FontFamily="Tw Cen MT Condensed" FontSize="18"/>
 
-            <TextBlock Text="Bill Amount:" FontFamily="Tw Cen MT Condensed" FontSize="18"/>
+            <TextBlock Text="Bill Amount (monthly) :" FontFamily="Tw Cen MT Condensed" FontSize="18"/>
             <TextBox x:Name="txtBillAmount" Margin="0 5 0 10"/>
             
             <TextBlock Text="Bill Type:" FontFamily="Tw Cen MT Condensed" FontSize="18"/>

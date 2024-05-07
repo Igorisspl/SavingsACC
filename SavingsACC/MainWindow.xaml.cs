@@ -37,8 +37,7 @@ namespace SavingsACC
 
             // Display the account number in a text block at the top of the window
             txtAccountNumber.Text = $"Account Number: {accountNumber}";
-
-            //Console.WriteLine($"Number of bills initialized: {bills.Count}");
+         
             UpdateAccountBalanceDisplay();
         }
 
@@ -95,7 +94,7 @@ namespace SavingsACC
             if (bills.Count == 0)
             {
                 MessageBox.Show("There are no bills to remove.");
-                return; // Exit the method without attempting to remove a bill
+                return; // Exit the method with attempting to remove a bill
             }
 
             // Remove the last bill input from the list
@@ -116,7 +115,7 @@ namespace SavingsACC
                 double balance = accountBalance; // Use the current account balance
                 double desiredSavings = double.Parse(txtDesiredSavings.Text);
 
-                // Calculate the remaining balance after deducting bills for 12 months
+                // Calculate the remaining balance after deducting bills for the year
                 double remainingBalance = balance - (GetTotalBillsAmount() * 12);
 
                 // Calculate the monthly savings needed to reach the desired savings
